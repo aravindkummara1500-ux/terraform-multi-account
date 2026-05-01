@@ -3,7 +3,7 @@ terraform {
     bucket         = "terraform-state-prod-101551113392" 
     key            = "vpc/terraform.tfstate"
     region         = "ap-south-1"
-    dynamodb_table = "terraform-lock-prod"                  
+    dynamodb_table = "terraform-lock-table"                  
     encrypt        = true
   }
 }
