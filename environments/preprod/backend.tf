@@ -4,7 +4,6 @@ terraform {
     key            = "preprod/vpc/terraform.tfstate"   # ✅ preprod key
     region         = "ap-south-1"
     dynamodb_table = "terraform-lock-table"
-    profile        = "preprod"
     encrypt        = true
   }
 }
