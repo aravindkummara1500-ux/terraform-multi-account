@@ -1,0 +1,37 @@
+name: Terraform Deploy
+
+on:
+  workflow_dispatch:   # ✅ only manual trigger
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        env: [preprod, prod]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ matrix.env == 'preprod' && secrets.PREPROD_ROLE_ARN || secrets.PROD_ROLE_ARN }}
+          aws-region: ap-south-1
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        working-directory: environments/${{ matrix.env }}
+        run: terraform init
+
+      - name: Terraform Plan
+        working-directory: environments/${{ matrix.env }}
+        run: terraform plan
+
+      - name: Terraform Apply
+        working-directory: environments/${{ matrix.env }}
+        run: terraform apply -auto-approve
